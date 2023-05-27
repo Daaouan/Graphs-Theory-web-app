@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block title %}home{% endblock %}
+<!-- {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    {% load pwa %}
+    {% progressive_web_app_meta %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Graph Theory PWA</title>
+</head>
+<body> -->
+  {% block content %}
+
+  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="https://flowbite.com/" class="flex items-center">
+          <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
+          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+      </a>
+      <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+      </button>
+      <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+        <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
+          </li>
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About</a>
+          </li>
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
+          </li>
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
+          </li>
+          <li>
+            <a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+    <form id="matrixForm">
+      Is the graph oriented ?
+      <input type="radio" name="question1" value="oui" id="oui" /> <label for="oui">oui</label>
+      <input type="radio" name="question1" value="non" id="non" /> <label for="non">non</label>
+      <br />Is the graph weighted ?
+      <input type="radio" name="question2" value="oui" id="oui" /> <label for="oui">oui</label>
+      <input type="radio" name="question2" value="non" id="non" /> <label for="non">non</label>
+      <br />
+      <label for="dimension">Enter matrix dimension: </label>
+        <input type="number" id="dimension" required>
+        <button type="submit">Generate</button>
+      </form>
+    
+      <div id="matrixContainer"></div>
+
+      <div id="submitButtonContainer" style="display: none;">
+        
+        <button type="submit" id="submitButton">Submit</button>
+      </div>
+
+      <div id="graphContainer"></div>
+      
+      <!-- <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script> -->
+      <script>
+        var dimension,GraphType;
+        document.getElementById('matrixForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent form submission
+        // Get the dimension value entered by the user
+        dimension = parseInt(document.getElementById('dimension').value);
+        var isGraphOriented = $('input[name="question1"]:checked').val();
+        var isGraphWeighted = $('input[name="question2"]:checked').val();
+        if (isGraphOriented === 'oui' && isGraphWeighted === 'oui') {
+            GraphType = 'dp';
+        } else if (isGraphOriented === 'non' && isGraphWeighted === 'non') {
+            GraphType = 'un';
+        } else if (isGraphOriented === 'oui' && isGraphWeighted === 'non') {
+            GraphType = 'dn';
+        } else if (isGraphOriented === 'non' && isGraphWeighted === 'oui') {
+            GraphType = 'up';
+        } else {
+            // Handle the case when none of the conditions match
+            GraphType = 'unknown';
+        }
+        console.log(GraphType)
+
+        // Generate the matrix based on the dimension
+        generateMatrix(dimension);
+
+        document.getElementById('submitButtonContainer').style.display = 'block';
+        });
+
+        function generateMatrix(dimension) {
+        var matrixContainer = document.getElementById('matrixContainer');
+        matrixContainer.innerHTML = ''; // Clear previous matrix (if any)
+
+        var matrix = document.createElement('table');
+        matrix.classList.add('matrix');
+
+        // Generate matrix rows and columns
+        for (var i = 0; i < dimension; i++) {
+            var row = document.createElement('tr');
+            for (var j = 0; j < dimension; j++) {
+            var cell = document.createElement('td');
+            var input = document.createElement('input');
+            input.type = 'number';
+            input.name = `cell_${i}_${j}`;
+            cell.appendChild(input);
+            row.appendChild(cell);
+            }
+            matrix.appendChild(row);
+        }
+
+        matrixContainer.appendChild(matrix);
+        }
+/////////////////////////////////////////////////////////////////////
+        document.getElementById('submitButton').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent form submission
+
+            // Handle the matrix input values
+            storeMatrixValues();
+            });
+/////////////////////////////////////////////////////////////////////
+function storeMatrixValues() {
+
+  var matrixValues = [];
+
+  for (var i = 0; i < dimension; i++) {
+    var rowValues = [];
+    for (var j = 0; j < dimension; j++) {
+      var input = document.getElementsByName(`cell_${i}_${j}`)[0];
+      var value = parseFloat(input.value);
+      rowValues.push(value);
+    }
+    
+    matrixValues.push(rowValues);
+    
+  }
+ 
+  console.log(GraphType)
+  var matrixData = {
+    GraphType:GraphType,
+    dimension: dimension,
+    matrix: matrixValues
+  };
+  
+
+  var jsonData = JSON.stringify(matrixData);
+  // console.log(jsonData)
+  
+  fetch('/save_matrix_data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: jsonData,
+})
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Error occurred while storing matrix values');
+    }
+  })
+  .then(data => {
+           // Retrieve the graph image from the JSON response
+           var graphImage = data.graph_image;
+
+            // Create an <img> element and set its source to the graph image
+            var imgElement = document.createElement('img');
+            imgElement.src = 'data:image/png;base64,' + graphImage;
+
+            // Append the image element to a container in your HTML
+            var graphContainer = document.getElementById('graphContainer');
+            graphContainer.innerHTML = '';
+            graphContainer.appendChild(imgElement);
+            })
+  .catch(error => {
+    console.error('An error occurred while storing matrix values:', error);
+  });
+}
+////////////////////////////////////////////////////////////////////
+
+    </script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}First page{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl text-green-800">Graph Theory PWA</h1>
+    <a href="{% url 'index' %}">
+        <button>"Get Started"</button>
+    </a>
+{% endblock %}
