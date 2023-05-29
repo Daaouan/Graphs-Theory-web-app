@@ -20,5 +20,4 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('Graph_Theory_app.urls')),
-    path('',include('pwa.urls')),
 ]

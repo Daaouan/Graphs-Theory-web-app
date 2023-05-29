@@ -1,5 +1,6 @@
 import base64
 import io
+import sys
 from django.shortcuts import render
 from django.http import HttpResponse
 # Create your views here.
@@ -10,11 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.figure import Figure
+from .algorithmesGraphes import PRIM , WARSHALL,KRUSKAL,DFS,BFS
 
-
-@csrf_exempt
-def first(request):
-    return render(request,"first.html")
 
 @csrf_exempt
 def index(request):
@@ -77,7 +75,6 @@ def DisplayGraph(matrix, graphType,nodesNumber):
         nx.draw_networkx_edge_labels(G, pos=layout, edge_labels=labels)
     if graphType == "dn" or graphType == "un":
         nx.draw(G, with_labels=True)
-    
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
@@ -87,3 +84,104 @@ def DisplayGraph(matrix, graphType,nodesNumber):
 
     # Return the graph image as JSON response
     return graph_image
+
+
+@csrf_exempt
+def bfs(request):
+    with open('file.json', 'r') as file:
+        contents = file.read()
+    js = json.loads(contents)
+    matr= js['matrix']
+    src=js['source']
+    output = io.StringIO()
+    sys.stdout = output
+    graph_image=BFS.BFS(matr,src)
+    # Restore the default stdout
+    sys.stdout = sys.__stdout__
+    # Get the captured output as a string
+    output_str = output.getvalue()
+    # graph=JsonResponse({'graph_image': graph_image})
+    context={'graph':graph_image,
+             'output': output_str}
+    return render(request,"bfs.html",context)
+
+@csrf_exempt
+def dfs(request):
+    with open('file.json', 'r') as file:
+        contents = file.read()
+    js = json.loads(contents)
+    matr= js['matrix']
+    src=js['source']
+    output = io.StringIO()
+    sys.stdout = output
+    graph_image=DFS.DFS(matr,src)
+    # Restore the default stdout
+    sys.stdout = sys.__stdout__
+    # Get the captured output as a string
+    output_str = output.getvalue()
+    # graph=JsonResponse({'graph_image': graph_image})
+    context={'graph':graph_image,
+             'output': output_str}
+    return render(request,"dfs.html",context)
+
+@csrf_exempt
+def kruskal(request):
+    with open('file.json', 'r') as file:
+        contents = file.read()
+    js = json.loads(contents)
+    dim = js['dimension']
+    matr= js['matrix']
+    GraphType=js['GraphType']
+    output = io.StringIO()
+    sys.stdout = output
+    graph_image=KRUSKAL.KRUSKAL(matr,dim,GraphType)
+    # Restore the default stdout
+    sys.stdout = sys.__stdout__
+    # Get the captured output as a string
+    output_str = output.getvalue()
+    # graph=JsonResponse({'graph_image': graph_image})
+    context={'graph':graph_image,
+             'output': output_str}
+    return render(request,"kruskal.html",context)
+
+@csrf_exempt
+def warshall(request):
+    with open('file.json', 'r') as file:
+        contents = file.read()
+    js = json.loads(contents)
+    dim = js['dimension']
+    matr= js['matrix']
+    GraphType=js['GraphType']
+    output = io.StringIO()
+    sys.stdout = output
+    graph_image=WARSHALL.WARSHALL(matr,dim,GraphType)
+    # Restore the default stdout
+    sys.stdout = sys.__stdout__
+    # Get the captured output as a string
+    output_str = output.getvalue()
+    # graph=JsonResponse({'graph_image': graph_image})
+    context={'graph':graph_image,
+             'output': output_str}
+    return render(request,"warshall.html",context)
+
+@csrf_exempt
+def prim(request):
+    with open('file.json', 'r') as file:
+        contents = file.read()
+    js = json.loads(contents)
+    dim = js['dimension']
+    matr= js['matrix']
+    GraphType=js['GraphType']
+    output = io.StringIO()
+    sys.stdout = output
+    graph_image=PRIM.PRIM(matr,dim,GraphType)
+    # Restore the default stdout
+    sys.stdout = sys.__stdout__
+    # Get the captured output as a string
+    output_str = output.getvalue()
+    # graph=JsonResponse({'graph_image': graph_image})
+    context={'graph':graph_image,
+             'output': output_str}
+    return render(request,"prim.html",context)
+
+

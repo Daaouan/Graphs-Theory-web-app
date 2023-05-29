@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% load static %} {% block title %}KRUKSAL{% endblock %}
+{% block content %}
+<h1>Output:</h1>
+<h1>{{ output }}</h1>
+<div id="graphContainer"></div>
+
+<script>
+
+
+    // Continue with further actions based on the data
+    // ...
+    var graphImage = '{{ graph|safe }}';
+        console.log(graphImage)
+
+        // Create an <img> element and set its source to the graph image
+        var imgElement = document.createElement("img");
+        imgElement.src = "data:image/png;base64," + graphImage;
+
+        // Append the image element to a container in your HTML
+        var graphContainer = document.getElementById("graphContainer");
+        graphContainer.innerHTML = "";
+        graphContainer.appendChild(imgElement);
+
+
+</script>
+
+{% endblock %}
