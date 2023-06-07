@@ -1,14 +1,29 @@
 {% extends 'base.html' %} {% load static %} {% block title %}WARSHALL{% endblock %}
 {% block content %}
-<h1>Output:</h1>
-<h1>{{ output }}</h1>
-<div id="graphContainer"></div>
+
+<div style="display: flex; padding-left: 50px;">
+    <div class="card text-center" style=" margin:25px auto; width: 48%; padding: 10px;">
+        <div class="card-header">
+            <b>Graph source</b>
+        </div>
+        <div class="card-body">
+            <div id="imageContainer"></div>
+        </div>
+    </div>
+    <div class="card text-center" style=" margin:25px auto; width: 48%; padding: 10px;">
+        <div class="card-header">
+            <b> WARSHALL algorithm</b>
+        </div>
+        <div class="card-body">
+            <div id="graphContainer"></div>
+        </div>
+    </div>
+</div>
 
 <script>
 
 
     // Continue with further actions based on the data
-    // ...
     var graphImage = '{{ graph|safe }}';
         console.log(graphImage)
 
@@ -21,6 +36,17 @@
         graphContainer.innerHTML = "";
         graphContainer.appendChild(imgElement);
 
+    // Continue with further actions based on the data
+    var image = '{{ image|safe }}';
+
+    // Create an <img> element and set its source to the graph image
+    var img = document.createElement("img");
+    img.src = "data:image/png;base64," + image;
+
+    // Append the image element to a container in your HTML
+    var imageContainer = document.getElementById("imageContainer");
+    imageContainer.innerHTML = "";
+    imageContainer.appendChild(img);
 
 </script>
 

@@ -46,8 +46,6 @@ def PRIM(matrix, nodesNumber, graphType):
             edge = (n, l[0], l[1])
             graph.append(edge)
 
-    if graphType == "dp":
-            G = nx.DiGraph()
     if graphType == "up":
             G = nx.Graph()
 

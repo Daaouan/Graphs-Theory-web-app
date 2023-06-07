@@ -7,9 +7,11 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
+from flask import redirect
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+from pyvis.network import Network
 from matplotlib.figure import Figure
 from .algorithmesGraphes import PRIM , WARSHALL,KRUSKAL,DFS,BFS
 
@@ -26,13 +28,10 @@ def save_matrix_data(request):
         dimension = data['dimension']
         matrix= data['matrix']
 
-        
-
         # Save the JSON data to a file within your project's file system
         with open('file.json', 'w') as file:
             file.write(json.dumps(data))
 
-        
         with open('file.json', 'r') as file:
             contents = file.read()
 
@@ -41,12 +40,11 @@ def save_matrix_data(request):
         matr= js['matrix']
         GraphType=js['GraphType']
         graph_image=DisplayGraph(matr, GraphType,dim)
-        # Generate and save the graph image
-         
+
+
+        # Generate and save the graph image 
         return JsonResponse({'graph_image': graph_image})
-    
         # Return the image file in the response
-        
         
     # Return an error response for non-POST requests
     response_data = {'error': 'Invalid request method'}
@@ -75,6 +73,7 @@ def DisplayGraph(matrix, graphType,nodesNumber):
         nx.draw_networkx_edge_labels(G, pos=layout, edge_labels=labels)
     if graphType == "dn" or graphType == "un":
         nx.draw(G, with_labels=True)
+    #plt.savefig('graph.png', format='png')
     # Convert the graph image to a base64-encoded string
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
@@ -84,6 +83,7 @@ def DisplayGraph(matrix, graphType,nodesNumber):
 
     # Return the graph image as JSON response
     return graph_image
+
 
 
 @csrf_exempt
@@ -96,12 +96,17 @@ def bfs(request):
     output = io.StringIO()
     sys.stdout = output
     graph_image=BFS.BFS(matr,src)
+    
+    dim = js['dimension']  
+    GraphType=js['GraphType']
+    graph_img=DisplayGraph(matr, GraphType,dim)
     # Restore the default stdout
     sys.stdout = sys.__stdout__
     # Get the captured output as a string
     output_str = output.getvalue()
     # graph=JsonResponse({'graph_image': graph_image})
     context={'graph':graph_image,
+             'image':graph_img,
              'output': output_str}
     return render(request,"bfs.html",context)
 
@@ -111,16 +116,20 @@ def dfs(request):
         contents = file.read()
     js = json.loads(contents)
     matr= js['matrix']
+    dim = js['dimension']  
+    GraphType=js['GraphType']
     src=js['source']
     output = io.StringIO()
     sys.stdout = output
     graph_image=DFS.DFS(matr,src)
+    graph_img=DisplayGraph(matr, GraphType,dim)
     # Restore the default stdout
     sys.stdout = sys.__stdout__
     # Get the captured output as a string
     output_str = output.getvalue()
     # graph=JsonResponse({'graph_image': graph_image})
     context={'graph':graph_image,
+             'image':graph_img,
              'output': output_str}
     return render(request,"dfs.html",context)
 
@@ -129,20 +138,27 @@ def kruskal(request):
     with open('file.json', 'r') as file:
         contents = file.read()
     js = json.loads(contents)
+    GraphType=js['GraphType']
     dim = js['dimension']
     matr= js['matrix']
     GraphType=js['GraphType']
-    output = io.StringIO()
-    sys.stdout = output
-    graph_image=KRUSKAL.KRUSKAL(matr,dim,GraphType)
-    # Restore the default stdout
-    sys.stdout = sys.__stdout__
-    # Get the captured output as a string
-    output_str = output.getvalue()
-    # graph=JsonResponse({'graph_image': graph_image})
-    context={'graph':graph_image,
-             'output': output_str}
-    return render(request,"kruskal.html",context)
+
+    if(GraphType=="dn" or GraphType=="dp"):
+        return render(request, 'error.html')
+    else:
+        output = io.StringIO()
+        sys.stdout = output
+        graph_image=KRUSKAL.KRUSKAL(matr,dim,GraphType)
+        graph_img=DisplayGraph(matr, GraphType,dim)
+        # Restore the default stdout
+        sys.stdout = sys.__stdout__
+        # Get the captured output as a string
+        output_str = output.getvalue()
+        # graph=JsonResponse({'graph_image': graph_image})
+        context={'graph':graph_image,
+                 'image':graph_img,
+                 'output': output_str}
+        return render(request,"kruskal.html",context)
 
 @csrf_exempt
 def warshall(request):
@@ -155,12 +171,14 @@ def warshall(request):
     output = io.StringIO()
     sys.stdout = output
     graph_image=WARSHALL.WARSHALL(matr,dim,GraphType)
+    graph_img=DisplayGraph(matr, GraphType,dim)
     # Restore the default stdout
     sys.stdout = sys.__stdout__
     # Get the captured output as a string
     output_str = output.getvalue()
     # graph=JsonResponse({'graph_image': graph_image})
     context={'graph':graph_image,
+             'image':graph_img,
              'output': output_str}
     return render(request,"warshall.html",context)
 
@@ -172,15 +190,19 @@ def prim(request):
     dim = js['dimension']
     matr= js['matrix']
     GraphType=js['GraphType']
+    if(GraphType=="dn" or GraphType=="dp"):
+        return render(request, 'error.html')
     output = io.StringIO()
     sys.stdout = output
     graph_image=PRIM.PRIM(matr,dim,GraphType)
+    graph_img=DisplayGraph(matr, GraphType,dim)
     # Restore the default stdout
     sys.stdout = sys.__stdout__
     # Get the captured output as a string
     output_str = output.getvalue()
     # graph=JsonResponse({'graph_image': graph_image})
     context={'graph':graph_image,
+             'image':graph_img,
              'output': output_str}
     return render(request,"prim.html",context)
 

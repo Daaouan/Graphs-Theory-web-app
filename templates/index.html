@@ -2,37 +2,42 @@
 {% block title %}home{% endblock %}
 {% block content %}
 
-<div style="display: flex; padding-left: 80px;">
-  <div class="card" style="width: 600px; height: 400px; margin-left: 30px; margin-top: 30px;">
+
+
+<div style="display: flex; padding-left: 110px;">
+  <div class="card" style="width: 600px; height: 480px; margin-left: 30px; margin-top: 30px;">
+    <div class="card-header text-center">
+      <b>Information about the graph</b>
+    </div>
     <div class="card-body">
       <form id="matrixForm">
         <div class="mb-3">
           <label for="question1" class="form-label">Is the graph oriented?</label>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="question1" id="question1_oui" value="oui">
-            <label class="form-check-label" for="question1_oui">oui</label>
+            <label class="form-check-label" for="question1_oui">yes</label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="question1" id="question1_non" value="non">
-            <label class="form-check-label" for="question1_non">non</label>
+            <label class="form-check-label" for="question1_non">no</label>
           </div>
         </div>
         <div class="mb-3">
           <label for="question2" class="form-label">Is the graph weighted?</label>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="question2" id="question2_oui" value="oui">
-            <label class="form-check-label" for="question2_oui">oui</label>
+            <label class="form-check-label" for="question2_oui">yes</label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="question2" id="question2_non" value="non">
-            <label class="form-check-label" for="question2_non">non</label>
+            <label class="form-check-label" for="question2_non">no</label>
           </div>
         </div>
         <div class="mb-3">
           <label for="dimension" class="form-label">Enter matrix dimension:</label>
           <input type="number" class="form-control" id="dimension" required><br>
-          <label for="source">Enter source:</label>
-          <input type="text" id="source" /><br>
+          <label for="source" class="form-label">Enter source:</label><br>
+          <input type="text" id="source" class="form-control" /><br>
         </div>
         <button type="submit" class="btn btn-primary"
           style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);">Generate</button>
@@ -40,8 +45,7 @@
     </div>
   </div>
 
-  <div class="card"
-    style="width: 600px; height: 400px; margin-left: 30px; margin-top: 30px; margin-right: auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+  <div class="card" style="width: 600px; height: 480px; margin-left: 30px; margin-top: 30px; margin-right: auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div id="matrixContainer" style="height: calc(100% - 50px); overflow-y: auto;"></div>
     <div id="submitButtonContainer" style="display: none; padding: 10px;">
       <button type="submit" id="submitButton" class="btn btn-primary"
@@ -56,7 +60,7 @@
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script> -->
 <script>
-  var dimension, GraphType,source;
+  var dimension, GraphType, source;
   document.getElementById('matrixForm').addEventListener('submit', function (e) {
     e.preventDefault(); // Prevent form submission
     // Get the dimension value entered by the user
@@ -140,7 +144,7 @@
       GraphType: GraphType,
       dimension: dimension,
       matrix: matrixValues,
-      source:source,
+      source: source,
     };
 
 
