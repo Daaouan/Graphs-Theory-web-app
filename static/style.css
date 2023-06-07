@@ -6,8 +6,9 @@
 
 
 #matrixContainer {
-    padding-top: 30px;
+    padding-top: 100px;
     padding-left: 30px;
+    padding-right: 30px;
     height: calc(100% - 50px);
     overflow-y: auto;
 }
@@ -15,4 +16,8 @@
 .graph {
     margin-bottom: 20px;
     padding-bottom: 20px;
+}
+
+.matrix{
+    width: 50px;
 }
